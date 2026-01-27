@@ -4,13 +4,16 @@ const db = require('../db/database');
 /**
  * Create a new sensor
  */
-function createSensor({ userEmail, type, name, url }) {
+function createSensor({ userEmail, type, name, secretHash }) {
+    console.log(`[Sensors Repository] Inserting sensor into database: ${name} for user ${userEmail}`);
     const stmt = db.prepare(`
-    INSERT INTO sensors (user_email, type, name, url)
+    INSERT INTO sensors (user_email, type, name, secret_hash)
     VALUES (?, ?, ?, ?)
   `);
 
-    return stmt.run(userEmail, type, name, url);
+    const result = stmt.run(userEmail, type, name, secretHash);
+    console.log(`[Sensors Repository] Sensor inserted successfully: ${name} (ID: ${result.lastInsertRowid})`);
+    return result;
 }
 
 /**
@@ -20,15 +23,6 @@ function getSensorById(sensorId) {
     return db
         .prepare('SELECT * FROM sensors WHERE id = ?')
         .get(sensorId);
-}
-
-/**
- * Get a sensor by URL (slug)
- */
-function getSensorByUrl(url) {
-    return db
-        .prepare('SELECT * FROM sensors WHERE url = ?')
-        .get(url);
 }
 
 /**
@@ -53,7 +47,6 @@ function deleteSensor(sensorId) {
 module.exports = {
     createSensor,
     getSensorById,
-    getSensorByUrl,
     getSensorsByUser,
     deleteSensor
 };

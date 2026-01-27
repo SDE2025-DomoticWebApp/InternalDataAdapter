@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   surname TEXT NOT NULL,
-  password_hash TEXT NOT NULL
+  password_hash TEXT NOT NULL,
+  location TEXT NOT NULL
 );
 
 -- =========================
@@ -18,7 +19,7 @@ CREATE TABLE IF NOT EXISTS sensors (
     type IN ('temperature', 'humidity', 'wind')
   ),
   name TEXT NOT NULL,
-  url TEXT NOT NULL UNIQUE,
+  secret_hash TEXT NOT NULL,
 
   FOREIGN KEY (user_email)
     REFERENCES users(email)

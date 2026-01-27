@@ -4,24 +4,27 @@ const sensorsRepo = require('../repositories/sensors.repo');
 
 // POST /sensors
 router.post('/', (req, res) => {
-    const { userEmail, type, name, url } = req.body;
+    const { userEmail, type, name, secretHash } = req.body;
 
-    if (!userEmail || !type || !name || !url) {
-        return res.status(400).json({ error: 'Missing required fields' });
+    if (!userEmail || !type || !name || !secretHash) {
+        return res.status(400).json({ error: 'Missing required fields: userEmail, type, name, secretHash' });
     }
 
     try {
+        console.log(`[Internal Data Adapter] Creating sensor in database: ${name} for user ${userEmail}`);
         const result = sensorsRepo.createSensor({
             userEmail,
             type,
             name,
-            url
+            secretHash
         });
 
+        console.log(`[Internal Data Adapter] Sensor successfully created: ${name} (ID: ${result.lastInsertRowid})`);
         res.status(201).json({ sensorId: result.lastInsertRowid });
     } catch (err) {
+        console.log(`[Internal Data Adapter] Failed to create sensor ${name}: ${err.message}`);
         if (err.code === 'SQLITE_CONSTRAINT') {
-            return res.status(409).json({ error: 'Sensor already exists' });
+            return res.status(409).json({ error: 'Constraint violation' });
         }
         res.status(500).json({ error: 'Internal server error' });
     }
@@ -30,13 +33,6 @@ router.post('/', (req, res) => {
 // GET /sensors/:id
 router.get('/:id', (req, res) => {
     const sensor = sensorsRepo.getSensorById(req.params.id);
-    if (!sensor) return res.status(404).end();
-    res.json(sensor);
-});
-
-// GET /sensors/by-url/:url
-router.get('/by-url/:url', (req, res) => {
-    const sensor = sensorsRepo.getSensorByUrl(req.params.url);
     if (!sensor) return res.status(404).end();
     res.json(sensor);
 });

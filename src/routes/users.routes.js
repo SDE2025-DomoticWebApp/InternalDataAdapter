@@ -3,14 +3,14 @@ const router = express.Router();
 const usersRepo = require('../repositories/users.repo');
 
 router.post('/', (req, res) => {
-    const { email, name, surname, passwordHash } = req.body;
-    if (!email || !name || !surname || !passwordHash) {
-        return res.status(400).json({ error: 'Missing fields' });
+    const { email, name, surname, passwordHash, location } = req.body;
+    if (!email || !name || !surname || !passwordHash || !location) {
+        return res.status(400).json({ error: 'Missing required fields: email, name, surname, passwordHash, location' });
     }
 
     try {
-        console.log(`[Internal Data Adapter] Creating user in database: ${email}`);
-        usersRepo.createUser({ email, name, surname, passwordHash });
+        console.log(`[Internal Data Adapter] Creating user in database: ${email} at ${location}`);
+        usersRepo.createUser({ email, name, surname, passwordHash, location });
         console.log(`[Internal Data Adapter] User successfully created: ${email}`);
         res.status(201).end();
     } catch (err) {
