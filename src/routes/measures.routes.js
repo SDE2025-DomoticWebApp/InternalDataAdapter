@@ -1,13 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const measuresRepo = require('../repositories/measures.repo');
+const sensorsRepo = require('../repositories/sensors.repo');
+const secretUtils = require('../utils/secret');
 
 // POST /measures
-router.post('/', (req, res) => {
-    const { sensorId, value, timestamp } = req.body;
+router.post('/', async (req, res) => {
+    const { sensorId, value, timestamp, secret } = req.body;
 
-    if (!sensorId || value === undefined) {
-        return res.status(400).json({ error: 'sensorId and value are required' });
+    if (!sensorId || value === undefined || !secret) {
+        return res.status(400).json({ error: 'sensorId, value and secret are required' });
+    }
+
+    const sensor = sensorsRepo.getSensorById(sensorId);
+
+    // Compare plain text secret with stored hash using bcrypt
+    const isValidSecret = await secretUtils.compare(secret, sensor.secret_hash);
+    if (!isValidSecret) {
+        return res.status(401).json({ error: 'Unauthorized' });
     }
 
     try {
