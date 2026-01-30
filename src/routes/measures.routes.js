@@ -3,6 +3,7 @@ const router = express.Router();
 const measuresRepo = require('../repositories/measures.repo');
 const sensorsRepo = require('../repositories/sensors.repo');
 const secretUtils = require('../utils/secret');
+const rulesClient = require('../clients/rules.client');
 
 // POST /measures
 router.post('/', async (req, res) => {
@@ -22,6 +23,7 @@ router.post('/', async (req, res) => {
 
     try {
         const result = measuresRepo.addMeasure(sensorId, value, timestamp);
+        rulesClient.sendMeasure({ sensorId, value, timestamp });
         res.status(201).json({ measureId: result.lastInsertRowid });
     } catch (err) {
         if (err.code === 'SQLITE_CONSTRAINT') {
