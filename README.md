@@ -22,7 +22,7 @@ Business Logic Layer (AuthService, RegistrationService, AggregatorService)
 
 **sensors**: `id` (PK), `user_email` (FK), `type` (temperature/humidity/wind), `name`, `url` (unique)
 
-**measures**: `id` (PK), `sensor_id` (FK), `timestamp`, `value`
+**measures**: `id` (PK), `sensor_id` (FK), `timestamp`, `value` (JSON string)
 
 *Foreign keys cascade on delete*
 
@@ -40,7 +40,7 @@ Business Logic Layer (AuthService, RegistrationService, AggregatorService)
 - `DELETE /sensors/:id` - Delete sensor
 
 ### Measures
-- `POST /measures` - Add measure (sensorId, value, timestamp?)
+- `POST /measures` - Add measure (sensorId, value:{<sensorType>:number}, timestamp?)
 - `GET /measures/sensor/:sensorId` - Get all measures
 - `GET /measures/sensor/:sensorId/latest` - Get latest measure
 - `GET /measures/sensor/:sensorId/range?from=...&to=...` - Get measures in range

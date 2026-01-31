@@ -14,6 +14,21 @@ router.post('/', async (req, res) => {
     }
 
     const sensor = sensorsRepo.getSensorById(sensorId);
+    if (!sensor) {
+        return res.status(404).json({ error: 'Sensor not found' });
+    }
+
+    if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        return res.status(400).json({ error: 'value must be an object with the sensor type as a key' });
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(value, sensor.type)) {
+        return res.status(400).json({ error: `value must include key "${sensor.type}"` });
+    }
+
+    if (!Number.isFinite(Number(value[sensor.type]))) {
+        return res.status(400).json({ error: `value.${sensor.type} must be a number` });
+    }
 
     // Compare plain text secret with stored hash using bcrypt
     const isValidSecret = await secretUtils.compare(secret, sensor.secret_hash);
