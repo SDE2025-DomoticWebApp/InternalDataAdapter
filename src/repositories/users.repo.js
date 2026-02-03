@@ -23,7 +23,14 @@ function findByEmail(email) {
         .get(email);
 }
 
+function getUsersLocations() {
+    return db
+        .prepare('SELECT email,location FROM users')
+        .all();
+}
+
 module.exports = {
     createUser,
-    findByEmail
+    findByEmail,
+    getUsersLocations
 };

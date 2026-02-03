@@ -19,6 +19,7 @@ db.exec(schema);
 app.use('/users', require('./routes/users.routes'));
 app.use('/sensors', require('./routes/sensors.routes'));
 app.use('/measures', require('./routes/measures.routes'));
+app.use('/locations', require('./routes/locations.routes'));
 
 // health check endpoint (optional but useful)
 app.get('/health', (req, res) => {

@@ -33,4 +33,15 @@ router.get('/:email', (req, res) => {
     res.json(user);
 });
 
+router.get('/locations', (req, res) => {
+    console.log(`[Internal Data Adapter] Fetching users and locations...`);
+    const usersLocations = usersRepo.getUsersLocations();
+    if (!usersLocations) {
+        console.log(`[Internal Data Adapter] Did not retrieve any users & locations.`);
+        return res.status(404).end();
+    }
+    console.log(`[Internal Data Adapter] Users and locations found.`);
+    res.json(user);
+});
+
 module.exports = router;
