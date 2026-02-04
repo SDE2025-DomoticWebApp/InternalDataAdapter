@@ -38,7 +38,9 @@ router.post('/', async (req, res) => {
 
     try {
         const result = measuresRepo.addMeasure(sensorId, value, timestamp);
-        rulesClient.sendMeasure({ sensorId, value, timestamp });
+        rulesClient.sendMeasure({ sensorId, value, timestamp }).catch((error) => {
+            console.warn('[Measures] Failed to forward to RulesService:', error.message);
+        });
         res.status(201).json({ measureId: result.lastInsertRowid });
     } catch (err) {
         if (err.code === 'SQLITE_CONSTRAINT') {
