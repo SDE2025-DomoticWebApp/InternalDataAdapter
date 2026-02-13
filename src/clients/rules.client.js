@@ -16,11 +16,12 @@ class RulesServiceClient {
     }
 
     /**
-     * Send incoming measures to the Rules Service
-     * @param {Object} measureData - User registration data
-     * @param {string|number} sensorId - sensor id
-     * @param {string|number} value - measured value (might be a JSON with multiple numbers inside)
-     * @param {string} timestamp - timestamp
+     * Send an incoming measure to the Rules Service for evaluation.
+     * @param {Object} measureData - Measure payload
+     * @param {string|number} measureData.sensorId - Sensor id
+     * @param {Object} measureData.value - Measurement object (keyed by sensor type)
+     * @param {string} [measureData.timestamp] - ISO timestamp
+     * @param {boolean} [measureData.isExternal] - Marks virtual/external sources
      */
     async sendMeasure(measureData) {
         try {

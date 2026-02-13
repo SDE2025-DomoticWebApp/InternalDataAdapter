@@ -41,7 +41,7 @@ router.get('/locations', (req, res) => {
         return res.status(404).end();
     }
     console.log(`[Internal Data Adapter] Users and locations found.`);
-    res.json(user);
+    res.json(usersLocations);
 });
 
 module.exports = router;
