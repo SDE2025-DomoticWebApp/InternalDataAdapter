@@ -7,7 +7,7 @@ SQLite persistence layer for users, sensors, and measurements.
 
 ## Configuration
 
-`.env`
+Create `.env` from `.env.example`:
 ```
 PORT=3001
 RULES_SERVICE_URL=http://localhost:3012
@@ -41,6 +41,7 @@ RULES_SERVICE_URL=http://localhost:3012
 
 - `POST /measures` verifies the sensor secret (bcrypt hash) before insert.
 - On successful insert, measures are forwarded to RulesService if configured.
+- SQLite database files live under `data/` and are not meant to be committed.
 
 ## Run
 ```
