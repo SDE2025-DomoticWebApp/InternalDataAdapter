@@ -37,6 +37,30 @@ RULES_SERVICE_URL=http://localhost:3012
 ### Health
 - `GET /health`
 
+
+## JSON Examples
+
+### `POST /users`
+```json
+{
+  "email": "user@example.com",
+  "name": "John",
+  "surname": "Doe",
+  "passwordHash": "<bcrypt-hash>",
+  "location": "45.07,7.69"
+}
+```
+
+### `POST /measures`
+```json
+{
+  "sensorId": 3,
+  "value": { "temperature": 21.4 },
+  "timestamp": "2026-02-18T12:00:00Z",
+  "secret": "mysecret123"
+}
+```
+
 ## Notes
 
 - `POST /measures` verifies the sensor secret (bcrypt hash) before insert.
